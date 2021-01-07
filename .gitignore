@@ -115,3 +115,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+#DeepSpeech Models
+*.pb
+*.scorer
+
+package-lock.json
