@@ -119,3 +119,5 @@ dist
 #DeepSpeech Models
 *.pb
 *.scorer
+
+package-lock.json
