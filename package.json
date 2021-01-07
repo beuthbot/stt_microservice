@@ -1,0 +1,27 @@
+{
+  "name": "@bhtbot/stt_service",
+  "version": "1.0.0",
+  "description": "Translate spoken audio to text.",
+  "main": "src/index.js",
+  "author": "Robert Halwaß",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "ts-node": "^9.0.0",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "@bhtbot/bhtbotservice": "^0.0.11",
+    "argparse": "^1.0.10",
+    "axios": "^0.21.0",
+    "deepspeech": "^0.8.0",
+    "dotenv": "^8.2.0",
+    "express-fileupload": "^1.2.0",
+    "node-wav": "0.0.2",
+    "sox-stream": "^2.0.3",
+    "util": "^0.11.1"
+  }
+}

@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  stt:
+    build: .
+    restart: always
+    ports:
+      - 9952:3000
+    environment:
+      - PORT
+
