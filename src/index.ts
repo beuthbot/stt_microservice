@@ -14,7 +14,7 @@ const DeepSpeech = require('deepspeech');
 const Fs = require('fs');
 const MemoryStream = require('memory-stream');
 const Duplex = require('stream').Duplex;
-const Wav = require('node-wav');
+const Sox = require('sox-stream');
 
 let modelPath = 'german.pb';
 
@@ -24,6 +24,8 @@ let scorerPath = 'german.scorer';
 
 model.enableExternalScorer(scorerPath);
 
+let desiredSampleRate = model.sampleRate();
+
 function bufferToStream(buffer) {
 	let stream = new Duplex();
 	stream.push(buffer);
@@ -31,12 +33,25 @@ function bufferToStream(buffer) {
 	return stream;
 }
 
-async function translate(file){
+async function translate(file: string): Promise<string>{
     const buffer = Fs.readFileSync(file);
     let audioStream = new MemoryStream();
-    bufferToStream(buffer).pipe(audioStream);
+    bufferToStream(buffer).bufferToStream(buffer).pipe(Sox({
+        global: {
+            'no-dither': true,
+        },
+        output: {
+            bits: 16,
+            rate: desiredSampleRate,
+            channels: 1,
+            encoding: 'signed-integer',
+            endian: 'little',
+            compression: 0.0,
+            type: 'raw'
+        }
+    }))pipe(audioStream);
 
-    audioStream.on('finish', () => {
+    return audioStream.on('finish', () => {
         let audioBuffer = audioStream.toBuffer();
         let result = model.stt(audioBuffer);
         console.log('Result:', result);
@@ -54,9 +69,8 @@ const app = new Service('sttService', config);
 app.endpoint('stt', async (req, answ)=>{
     //let file = req.files.audio
     console.log(req)
-    let file = 'test6.wav';
-    let translation = await translate(file)
-    return answ.setContent('Hello').setCacheable(false);
+    let file = 'test.wav';
+    return answ.setContent(await translate(file)).setCacheable(false);
 })
 
 /* Start server */
