@@ -11,7 +11,6 @@ import {config as dotenvConfig} from 'dotenv';
 dotenvConfig();
 
 const DeepSpeech = require('deepspeech');
-const Fs = require('fs');
 const MemoryStream = require('memory-stream');
 const Duplex = require('stream').Duplex;
 const Sox = require('sox-stream');
@@ -33,10 +32,9 @@ function bufferToStream(buffer) {
 	return stream;
 }
 
-async function translate(file: string): Promise<string>{
-    const buffer = Fs.readFileSync(file);
+async function translate(buffer: string): Promise<string>{
     let audioStream = new MemoryStream();
-    bufferToStream(buffer).bufferToStream(buffer).pipe(Sox({
+    bufferToStream(buffer).pipe(Sox({
         global: {
             'no-dither': true,
         },
@@ -49,7 +47,7 @@ async function translate(file: string): Promise<string>{
             compression: 0.0,
             type: 'raw'
         }
-    }))pipe(audioStream);
+    })).pipe(audioStream);
 
     return audioStream.on('finish', () => {
         let audioBuffer = audioStream.toBuffer();
@@ -66,12 +64,11 @@ config.port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = new Service('sttService', config);
 
 /* Listen on endpoint /stt */
-app.endpoint('stt', async (req, answ)=>{
-    //let file = req.files.audio
-    console.log(req)
-    let file = 'test.wav';
-    return answ.setContent(await translate(file)).setCacheable(false);
-})
+app.fileUploadEndpoint('stt', async (req, answ)=>{
+    let buffer = req.files.audio.data;
+    answ.setHistory()
+    return answ.setContent(await translate(buffer)).setCacheable(false).addHistory('STT');
+});
 
 /* Start server */
 app.start();
