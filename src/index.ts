@@ -25,37 +25,41 @@ model.enableExternalScorer(scorerPath);
 
 let desiredSampleRate = model.sampleRate();
 
+const soxConfig = {
+    global: {
+        'no-dither': true,
+    },
+    output: {
+        bits: 16,
+        rate: desiredSampleRate,
+        channels: 1,
+        encoding: 'signed-integer',
+        endian: 'little',
+        compression: 0.0,
+        type: 'raw'
+    }
+};
+
 function bufferToStream(buffer) {
-	let stream = new Duplex();
-	stream.push(buffer);
-	stream.push(null);
-	return stream;
+    let stream = new Duplex();
+    stream.push(buffer);
+    stream.push(null);
+    return stream;
 }
 
-async function translate(buffer: string): Promise<string>{
-    let audioStream = new MemoryStream();
-    bufferToStream(buffer).pipe(Sox({
-        global: {
-            'no-dither': true,
-        },
-        output: {
-            bits: 16,
-            rate: desiredSampleRate,
-            channels: 1,
-            encoding: 'signed-integer',
-            endian: 'little',
-            compression: 0.0,
-            type: 'raw'
-        }
-    })).pipe(audioStream);
-
-    return audioStream.on('finish', () => {
+function translate(buffer: Buffer, callback: (result: string) => void): void{
+    let start = Date.now();
+    const audioStream = bufferToStream(buffer).pipe(Sox(soxConfig)).pipe(new MemoryStream());
+    audioStream.on('finish', async () => {
         let audioBuffer = audioStream.toBuffer();
-        let result = model.stt(audioBuffer);
+        let result = await model.stt(audioBuffer);
         console.log('Result:', result);
-        return result;
-    }); 
+        console.log("Berechnungszeit:", Date.now() - start);
+        callback(result);
+    });
 }
+
+const translatePromise = (buffer: Buffer)=> new Promise<string>((resolve, reject) => { translate(buffer, resolve) })
 
 /* Init Service */
 import {Service, AppConfig} from '@bhtbot/bhtbotservice';
@@ -64,10 +68,9 @@ config.port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = new Service('sttService', config);
 
 /* Listen on endpoint /stt */
-app.fileUploadEndpoint('stt', async (req, answ)=>{
+app.fileUploadEndpoint('stt', async (req, answ) =>{
     let buffer = req.files.audio.data;
-    answ.setHistory()
-    return answ.setContent(await translate(buffer)).setCacheable(false).addHistory('STT');
+    return answ.setContent(await translatePromise(buffer)).setCacheable(false).addHistory('stt');
 });
 
 /* Start server */
