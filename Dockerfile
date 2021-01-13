@@ -13,7 +13,7 @@ RUN npm install
 RUN npm ci --only=production
 
 # Install Sox for converting different audio formats to WAV
-RUN apt-get install sox
+RUN apt-get update && apt-get install sox
 
 # Bundle app source
 COPY . .
