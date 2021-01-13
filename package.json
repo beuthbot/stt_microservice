@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "test": "node measureCalculatingTime.js"
+    "measure": "node measureCalculationTime.js"
   },
   "devDependencies": {
     "ts-node": "^9.0.0",

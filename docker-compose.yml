@@ -1,10 +1,13 @@
 version: '3.7'
 services:
-  stt:
+  beuthbot:
     build: .
-    restart: always
-    ports:
-      - 9952:3000
+    restart: unless-stopped
     environment:
-      - PORT
+      - PORT=7002
+
+networks:
+  default:
+    external:
+      name: beuthbot_network
 

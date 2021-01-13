@@ -10,7 +10,7 @@ COPY package*.json ./
 
 RUN npm install
 # If you are building your code for production
-# RUN npm ci --only=production
+RUN npm ci --only=production
 
 # Install Sox for converting different audio formats to WAV
 RUN apt-get install sox
@@ -18,5 +18,4 @@ RUN apt-get install sox
 # Bundle app source
 COPY . .
 
-EXPOSE 7001
 CMD [ "npm", "start" ]
