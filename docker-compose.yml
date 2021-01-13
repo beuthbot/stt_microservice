@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  beuthbot:
+  stt_microservice:
     build: .
     restart: unless-stopped
     environment:
