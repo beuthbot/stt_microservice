@@ -6,7 +6,7 @@ services:
     ports:
       - 7002:7002
     environment:
-      - PORT=7002
+      - STT_PORT=7002
 
 networks:
   default:

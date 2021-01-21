@@ -14,12 +14,50 @@ const DeepSpeech = require('deepspeech');
 const MemoryStream = require('memory-stream');
 const Duplex = require('stream').Duplex;
 const Sox = require('sox-stream');
+const drive = require('drive');
+const fs = require('fs');
 
 let modelPath = 'german.pb';
 
-let model = new DeepSpeech.Model(modelPath);
-
 let scorerPath = 'german.scorer';
+
+// try {
+//     if (!fs.existsSync(modelPath)) {
+//         var fileId = '1Dt7ddf0QmuckZksw69vCa_bjFElkG5MB';
+//         var dest = fs.createWriteStream(modelPath);
+//         drive.files.get({
+//           fileId: fileId,
+//           alt: 'media'
+//         })
+//             .on('end', function () {
+//               console.log('Downloaded Model File');
+//             })
+//             .on('error', function (err) {
+//               console.log('Error during download', err);
+//             })
+//             .pipe(dest);
+//     }
+
+//     if (!fs.existsSync(scorerPath)) {
+//         var fileId = '1BY-G-W3bwuVvEWy7Gg_sR7gMSqDmC1pi';
+//         var dest = fs.createWriteStream(scorerPath);
+//         drive.files.get({
+//           fileId: fileId,
+//           alt: 'media'
+//         })
+//             .on('end', function () {
+//               console.log('Downloaded Scorer File');
+//             })
+//             .on('error', function (err) {
+//               console.log('Error during download', err);
+//             })
+//             .pipe(dest);
+//     }
+// } catch(err) {
+//     console.error(err)
+// }
+
+let model = new DeepSpeech.Model(modelPath);
 
 model.enableExternalScorer(scorerPath);
 
@@ -64,7 +102,7 @@ const translatePromise = (buffer: Buffer)=> new Promise<string>((resolve, reject
 /* Init Service */
 import {Service, AppConfig} from '@bhtbot/bhtbotservice';
 const config = new AppConfig();
-config.port = process.env.PORT ? Number(process.env.PORT) : 3000;
+config.port = process.env.STT_PORT ? Number(process.env.STT_PORT) : 3000;
 const app = new Service('sttService', config);
 
 /* Listen on endpoint /stt */
