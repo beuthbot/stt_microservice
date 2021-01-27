@@ -14,7 +14,6 @@ const DeepSpeech = require('deepspeech');
 const MemoryStream = require('memory-stream');
 const Duplex = require('stream').Duplex;
 const Sox = require('sox-stream');
-const drive = require('drive');
 const fs = require('fs');
 
 let modelPath = 'german.pb';
