@@ -16,45 +16,9 @@ const Duplex = require('stream').Duplex;
 const Sox = require('sox-stream');
 const fs = require('fs');
 
-let modelPath = 'german.pb';
+let modelPath = 'output_graph.pb';
 
-let scorerPath = 'german.scorer';
-
-// try {
-//     if (!fs.existsSync(modelPath)) {
-//         var fileId = '1Dt7ddf0QmuckZksw69vCa_bjFElkG5MB';
-//         var dest = fs.createWriteStream(modelPath);
-//         drive.files.get({
-//           fileId: fileId,
-//           alt: 'media'
-//         })
-//             .on('end', function () {
-//               console.log('Downloaded Model File');
-//             })
-//             .on('error', function (err) {
-//               console.log('Error during download', err);
-//             })
-//             .pipe(dest);
-//     }
-
-//     if (!fs.existsSync(scorerPath)) {
-//         var fileId = '1BY-G-W3bwuVvEWy7Gg_sR7gMSqDmC1pi';
-//         var dest = fs.createWriteStream(scorerPath);
-//         drive.files.get({
-//           fileId: fileId,
-//           alt: 'media'
-//         })
-//             .on('end', function () {
-//               console.log('Downloaded Scorer File');
-//             })
-//             .on('error', function (err) {
-//               console.log('Error during download', err);
-//             })
-//             .pipe(dest);
-//     }
-// } catch(err) {
-//     console.error(err)
-// }
+let scorerPath = 'kenlm.scorer';
 
 let model = new DeepSpeech.Model(modelPath);
 
