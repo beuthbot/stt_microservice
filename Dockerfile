@@ -1,25 +1,14 @@
-FROM node:12
-
-# Create app directory
+FROM python:3.6
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
 COPY download.sh ./
-
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
-
-# Install Sox for converting different audio formats to WAV
-RUN apt-get update && apt-get install sox -y
-
-# Download Modelfiles (if neccessary)
 RUN sh download.sh
 
-# Bundle app source
+COPY package*.json ./
+RUN npm install
+
+
+
 COPY . .
 
 CMD [ "npm", "start" ]

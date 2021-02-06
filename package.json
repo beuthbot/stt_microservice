@@ -20,7 +20,6 @@
     "deepspeech": "^0.9.3",
     "dotenv": "^8.2.0",
     "express-fileupload": "^1.2.0",
-    "googleapis": "^39.2.0",
     "node-wav": "0.0.2",
     "sox-stream": "^2.0.3",
     "util": "^0.11.1"

@@ -16,7 +16,7 @@ const Duplex = require('stream').Duplex;
 const Sox = require('sox-stream');
 const fs = require('fs');
 
-let modelPath = 'output_graph.pb';
+let modelPath = 'output_graph.pbmm';
 
 let scorerPath = 'kenlm.scorer';
 
