@@ -6,7 +6,7 @@
   "author": "Robert Halwaß",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node src/index.ts"
   },
   "devDependencies": {
     "ts-node": "^9.0.0",
