@@ -15,6 +15,7 @@ const MemoryStream = require('memory-stream');
 const Duplex = require('stream').Duplex;
 const Sox = require('sox-stream');
 const fs = require('fs');
+const { spawnSync } = require('child_process');
 
 let modelPath = 'output_graph.pbmm';
 
@@ -71,7 +72,10 @@ const app = new Service('sttService', config);
 /* Listen on endpoint /stt */
 app.fileUploadEndpoint('stt', async (req, answ) =>{
     let buffer = req.files.audio.data;
-    return answ.setContent(await translatePromise(buffer)).setCacheable(false).addHistory('stt');
+    fs.writeFileSync("file.ogg", buffer)
+    spawnSync('sox', ['|opusdec --force-wav file.ogg -', 'file.wav']);
+    const file = fs.readFileSync('file.wav')
+    return answ.setContent(await translatePromise(file)).setCacheable(false).addHistory('stt');
 });
 
 /* Start server */

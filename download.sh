@@ -1,11 +1,14 @@
 #!/bin/bash
 
 apt-get update
+apt-get install ffmpeg -y
+apt-get install libogg0 -y
+apt-get install libopus0 -y
+apt-get install opus-tools -y
+apt-get install sox -y
 
 curl -sL https://deb.nodesource.com/setup_12.x | bash -
 apt-get install -y nodejs
-
-apt-get install sox -y
 
 git clone https://github.com/circulosmeos/gdown.pl.git gdown
 
